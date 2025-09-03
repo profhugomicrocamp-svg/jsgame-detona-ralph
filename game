@@ -1,0 +1,113 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>JSGame Detona Ralph</title>
+  <style>
+    body {
+      margin: 0;
+      font-family: Arial, sans-serif;
+      background-color: #f0f0f0;
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      justify-content: center;
+      height: 100vh;
+    }
+
+    h1 {
+      margin-bottom: 10px;
+    }
+
+    #game {
+      position: relative;
+      width: 600px;
+      height: 400px;
+      background-color: #fff;
+      border: 2px solid #333;
+      overflow: hidden;
+    }
+
+    #ralph {
+      position: absolute;
+      width: 60px;
+      height: 60px;
+      background-image: url('ralph.png'); /* Coloque a imagem do Ralph na mesma pasta */
+      background-size: cover;
+      cursor: pointer;
+    }
+
+    #score {
+      margin-top: 10px;
+      font-size: 22px;
+      font-weight: bold;
+    }
+  </style>
+</head>
+<body>
+
+  <h1>JSGame Detona Ralph</h1>
+  <div id="game">
+    <div id="ralph"></div>
+  </div>
+  <div id="score">Pontuação: 0</div>
+
+  <audio id="pointSound" src="coin.wav"></audio> <!-- Coloque o som coin.wav na mesma pasta -->
+
+  <script>
+    const ralph = document.getElementById('ralph');
+    const scoreDisplay = document.getElementById('score');
+    const game = document.getElementById('game');
+    const pointSound = document.getElementById('pointSound');
+
+    let score = 0;
+    const step = 20; // Passo do movimento
+
+    // Movimentação com setas
+    document.addEventListener('keydown', (e) => {
+      const rTop = ralph.offsetTop;
+      const rLeft = ralph.offsetLeft;
+
+      switch(e.key) {
+        case 'ArrowUp':
+          if(rTop > 0) ralph.style.top = rTop - step + 'px';
+          break;
+        case 'ArrowDown':
+          if(rTop < game.clientHeight - ralph.clientHeight)
+            ralph.style.top = rTop + step + 'px';
+          break;
+        case 'ArrowLeft':
+          if(rLeft > 0) ralph.style.left = rLeft - step + 'px';
+          break;
+        case 'ArrowRight':
+          if(rLeft < game.clientWidth - ralph.clientWidth)
+            ralph.style.left = rLeft + step + 'px';
+          break;
+      }
+    });
+
+    // Clique no Ralph para pontuar
+    ralph.addEventListener('click', () => {
+      score++;
+      scoreDisplay.textContent = `Pontuação: ${score}`;
+      pointSound.currentTime = 0; // reinicia o som
+      pointSound.play();
+      moveRalphRandom();
+    });
+
+    function moveRalphRandom() {
+      const maxTop = game.clientHeight - ralph.clientHeight;
+      const maxLeft = game.clientWidth - ralph.clientWidth;
+      const top = Math.floor(Math.random() * maxTop);
+      const left = Math.floor(Math.random() * maxLeft);
+      ralph.style.top = top + 'px';
+      ralph.style.left = left + 'px';
+    }
+
+    // Inicializa posição aleatória
+    moveRalphRandom();
+  </script>
+
+</body>
+</html>
